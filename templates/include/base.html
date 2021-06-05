@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Рецепты</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'pages/index.css' %}">
+    </head>
+<body>
+        {% include 'nav.html' %}
+    <main>
+        <div class="container">
+            <h1>{% block header %}The Last Social Media You'll Ever Need{% endblock %}</h1>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+        {% include 'footer.html' %}
+</body>
+
+</html> 
