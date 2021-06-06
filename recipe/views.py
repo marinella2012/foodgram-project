@@ -13,6 +13,6 @@ def index(request):
     page = paginator.get_page(page_number)
     return render(
          request,
-         'recipes/indexAuth.html',
+         'recipes/index.html',
          {'page': page, 'paginator': paginator}
     )

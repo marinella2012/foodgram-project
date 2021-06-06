@@ -28,8 +28,11 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'rest_framework',
     'django_filters',
+    'widget_tweaks',
     'foodgram',
     'recipe',
+    'users',
+    'about'
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'builtins': [
+                'users.templatetags.user_filters',
+            ]
         },
     },
 ]
@@ -109,9 +115,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

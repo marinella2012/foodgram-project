@@ -17,10 +17,10 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        ordering = ['name']
+        ordering = ['title']
 
     def __str__(self):
-        return self.title
+        return f'{self.title}, {self.measure}'
 
 
 class Tag(models.Model):
@@ -83,7 +83,7 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
 
     def __str__(self):
-        return self.title
+        return f'{self.title}, {self.author}'
 
 
 class RecipeIngredient(models.Model):
@@ -95,8 +95,7 @@ class RecipeIngredient(models.Model):
     )
     quantity = models.DecimalField(
         max_digits=6,
-        decimal_places=1,
-# validators=[MinValueValidator(0.5)]
+        decimal_places=1
     )
 
     class Meta:
