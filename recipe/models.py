@@ -1,5 +1,6 @@
 from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from django.db import models
 
 User = get_user_model()
@@ -24,11 +25,18 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
+    COLORS = (
+        ('green', 'Зеленый'),
+        ('orange', 'Оранжевый'),
+        ('purple', 'Пурпурный')
+    )
     title = models.CharField('Имя тега', max_length=50, db_index=True)
+    display_name = models.CharField('Имя тега для шаблона', max_length=50)
+    color = models.CharField('Цвет тега', max_length=50, choices=COLORS)
 
     class Meta:
-        verbose_name = 'Тег'
-        verbose_name_plural = 'Теги'
+        verbose_name = 'тег'
+        verbose_name_plural = 'теги'
 
     def __str__(self):
         return self.title
@@ -95,7 +103,8 @@ class RecipeIngredient(models.Model):
     )
     quantity = models.DecimalField(
         max_digits=6,
-        decimal_places=1
+        decimal_places=1,
+        validators=[MinValueValidator(1)]
     )
 
     class Meta:

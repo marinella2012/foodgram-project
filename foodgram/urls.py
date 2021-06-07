@@ -1,14 +1,19 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls import handler400, handler404, handler500  # noqa
+
+
+handler400 = 'foodgram.views.page_bad_request'  # noqa
+handler404 = 'foodgram.views.page_not_found'  # noqa
+handler500 = 'foodgram.views.server_error'  # noqa
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('recipe.urls')),
     path('auth/', include('users.urls')),
-#    path('auth/', include('django.contrib.auth.urls')),
-    path('about/', include('about.urls', namespace='about'))
+    path('about/', include('about.urls')),
+#    path('api/', include('api.urls')),
+    path('', include('recipe.urls')),
 ]
 
 '''
