@@ -17,6 +17,7 @@ DEBUG = True
 # ALLOWED_HOSTS = ENV['ALLOWED_HOSTS'].split()
 
 ALLOWED_HOSTS = ['*']
+SITE_ID = 1
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -60,6 +61,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'recipe.context_processors.year',
             ],
         },
     },
@@ -96,12 +98,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
-}
-
 LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
@@ -115,25 +111,29 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Static & media files
 STATIC_URL = '/static/'
-
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'staticfiles'),)
 
 MEDIA_URL = '/media/'
-
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, './static/')]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/auth/login/'
 
 LOGIN_REDIRECT_URL = 'index'
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+ADMINS = (
+    ('admin', 'ficus23@mail.ru'),
+)
+MANAGERS = ADMINS
 
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-SITE_ID = 1
+
 
 PAGINATION_PAGE_SIZE = 6

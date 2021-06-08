@@ -1,8 +1,7 @@
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls import handler400, handler404, handler500  # noqa
-
+from django.contrib import admin
+from django.urls import include, path
 
 handler400 = 'foodgram.views.page_bad_request'  # noqa
 handler404 = 'foodgram.views.page_not_found'  # noqa
