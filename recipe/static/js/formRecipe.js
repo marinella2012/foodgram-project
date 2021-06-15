@@ -49,7 +49,6 @@ function Ingredients() {
         }
     };
     // удаление элемента
-
     const eventDelete = (e) => {
         if(e.target.classList.contains('form__field-item-delete')) {
             const item = e.target.closest('.form__field-item-ingredient');

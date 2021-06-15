@@ -1,7 +1,7 @@
-from autoslug import AutoSlugField
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
+from slugify import slugify
 
 User = get_user_model()
 
@@ -32,11 +32,16 @@ class Tag(models.Model):
     )
     title = models.CharField('Имя тега', max_length=50, db_index=True)
     display_name = models.CharField('Имя тега для шаблона', max_length=50)
-    color = models.CharField('Цвет тега', max_length=50, choices=COLORS)
+    color = models.CharField(
+        'Цвет тега',
+        max_length=50,
+        choices=COLORS,
+        unique=True)
 
     class Meta:
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
+        ordering = ('title', )
 
     def __str__(self):
         return self.title
@@ -83,7 +88,19 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Теги'
     )
-    slug = AutoSlugField(populate_from='title', allow_unicode=True)
+    slug = models.SlugField(
+        verbose_name='slug',
+        max_length=100,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+    def save(self, *args, **kwargs):
+        raw_slug = self.slug or self.title
+        new_id = Recipe.objects.order_by('id').last().id + 1
+        self.slug = slugify(raw_slug + str(new_id))
+        return super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['-pub_date']

@@ -17,6 +17,7 @@ DEBUG = True
 # ALLOWED_HOSTS = ENV['ALLOWED_HOSTS'].split()
 
 ALLOWED_HOSTS = ['*']
+
 SITE_ID = 1
 
 INSTALLED_APPS = [
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     'foodgram',
     'recipe',
     'users',
+    'api',
     'about'
 ]
 
@@ -62,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'recipe.context_processors.year',
+                'recipe.context_processors.shop_list_size',
             ],
         },
     },
@@ -98,6 +101,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
+
 LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
@@ -111,10 +123,9 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Static & media files
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'staticfiles'),)
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -133,7 +144,5 @@ if DEBUG:
     EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-
 
 PAGINATION_PAGE_SIZE = 6
