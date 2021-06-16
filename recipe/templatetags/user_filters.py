@@ -1,5 +1,6 @@
-from api.models import Subscription, Favorite, Purchase
 from django import template
+
+from api.models import Favorite, Purchase
 
 register = template.Library()
 
@@ -12,10 +13,6 @@ def addclass(field, css):
 @register.filter
 def get_full_name_or_username(user):
     return user.get_full_name() or user.username
-
-@register.filter
-def is_subscribed_to(user, author):
-    return Subscription.objects.filter(user=user, author=author).exists()
 
 
 @register.filter

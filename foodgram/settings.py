@@ -21,6 +21,10 @@ ALLOWED_HOSTS = ['*']
 SITE_ID = 1
 
 INSTALLED_APPS = [
+    'recipe',
+    'users',
+    'api',
+    'about',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,11 +35,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'widget_tweaks',
-    'foodgram',
-    'recipe',
-    'users',
-    'api',
-    'about'
 ]
 
 MIDDLEWARE = [

@@ -3,7 +3,7 @@
       {% with request.resolver_match.url_name as url_name %}
         <ul class="nav__items list">  
           {% url 'index' as path %}
-            <li class="nav__item {% if 'index' == url_name or 'recipe_view' == url_name %}nav__item_active{% endif %}"><a href="{% url 'index' %}" class="nav__link link">Рецепты</a></li>
+            <li class="nav__item {% if 'index' == url_name or 'recipe_view' == url_name or 'profile_view' == url_name %}nav__item_active{% endif %}"><a href="{% url 'index' %}" class="nav__link link">Рецепты</a></li>
             {% if user.is_authenticated %}
             <li class="nav__item {% if 'subscriptions' in url_name %}nav__item_active{% endif %}"><a href="#" class="nav__link link">Мои подписки</a></li>
             <li class="nav__item {% if 'recipe_new' in url_name %}nav__item_active{% endif %}"><a href="{% url 'recipe_new' %}" class="nav__link link">Создать рецепт</a></li>

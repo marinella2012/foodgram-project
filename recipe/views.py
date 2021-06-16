@@ -1,8 +1,10 @@
+from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
+from api.models import Subscription
 from foodgram.settings import PAGINATION_PAGE_SIZE
 
 from .forms import RecipeForm
@@ -60,23 +62,29 @@ def recipe_new(request):
     return render(request, 'recipes/formRecipe.html', {'form': form})
 
 
-def profile_view(request):
-    tags = request.GET.getlist('tag')
+def profile_view(request, username, **filters):
     all_tags = Tag.objects.all()
-    filter_keys = {}
+    tags = request.GET.getlist('tag')
+    author = get_object_or_404(User, username=username)
     if tags:
-        filter_keys['tag__title__in'] = tags
-    recipes = Recipe.objects.filter(**filter_keys).distinct()
-    paginator = Paginator(recipes, PAGINATION_PAGE_SIZE)
+        filters['tag__title__in'] = tags
+    author_recipes = Recipe.objects.filter(author=author).distinct()
+    is_followed = (
+        request.user.is_authenticated
+        and Subscription.objects.filter(
+            user=request.user,
+            author=author).exists())
+    paginator = Paginator(author_recipes, PAGINATION_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
         request,
         'recipes/authorRecipe.html',
         {
+            'is_followed': is_followed,
+            'author': author,
             'page': page,
             'paginator': paginator,
-            'tags': tags,
-            'all_tags': all_tags,
+            'all_tags ': all_tags,
         }
     )
