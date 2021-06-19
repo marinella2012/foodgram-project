@@ -11,15 +11,16 @@ from .models import Ingredient, RecipeIngredient
 
 def get_ingredients(request):
     ingredients = {}
-    for key, name in request.POST.items():
+    for key, title in request.POST.items():
         if key.startswith('nameIngredient'):
             num = key.split('_')[1]
-            ingredients[name] = request.POST[f'valueIngredient_{num}']
+            ingredients[title] = request.POST[f'valueIngredient_{num}']
     return ingredients
 
 
 def save_recipe(request, form, author=None, is_edit=False):
     try:
+        print(form)
         recipe = form.save(commit=False)
         recipe.author = author if author else request.user
         recipe.save()
@@ -29,8 +30,8 @@ def save_recipe(request, form, author=None, is_edit=False):
         with transaction.atomic():
             ingredients = get_ingredients(request)
             recipe_ingredients = []
-            for name, quantity in ingredients.items():
-                ingredient = get_object_or_404(Ingredient, title=name)
+            for title, quantity in ingredients.items():
+                ingredient = get_object_or_404(Ingredient, title=title)
                 obj = RecipeIngredient(
                     recipe=recipe,
                     ingredient=ingredient,
@@ -47,9 +48,6 @@ def save_recipe(request, form, author=None, is_edit=False):
 
 
 def edit_recipe(request, form, instance):
-    """
-    A wrapper function for save_recipe to allow editing.
-    """
     try:
         with transaction.atomic():
             RecipeIngredient.objects.filter(recipe=instance).delete()
@@ -59,9 +57,6 @@ def edit_recipe(request, form, instance):
 
 
 def generate_pdf(template_name, context):
-    """
-    Generate a PDF file from Django template.
-    """
     pdf_options = {
         'page-size': 'Letter',
         'margin-top': '0.75in',

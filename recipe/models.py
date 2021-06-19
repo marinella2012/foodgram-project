@@ -98,7 +98,11 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         raw_slug = self.slug or self.title
-        new_id = Recipe.objects.order_by('id').last().id + 1
+        new_id = Recipe.objects.order_by('id').last()
+        if new_id is not None:
+            new_id = new_id.id + 1
+        else:
+            new_id = 1
         self.slug = slugify(raw_slug + str(new_id))
         return super().save(*args, **kwargs)
 
@@ -121,8 +125,15 @@ class RecipeIngredient(models.Model):
     quantity = models.DecimalField(
         max_digits=6,
         decimal_places=1,
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1)],
+        verbose_name='Количество'
     )
 
     class Meta:
-        unique_together = ('ingredient', 'recipe')
+        verbose_name = 'Ингредиент рецепта'
+        verbose_name_plural = 'Ингредиенты рецепта'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['ingredient', 'recipe'],
+                name='unique_ingredient_recipe')
+        ]

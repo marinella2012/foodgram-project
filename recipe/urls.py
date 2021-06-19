@@ -2,7 +2,19 @@ from django.urls import include, path
 
 from . import views
 
-'''path(
+recipes_urls = [
+    path('new/', views.recipe_new, name='recipe_new'),
+    path(
+        '<int:recipe_id>/<slug:slug>/',
+        views.recipe_view,
+        name='recipe_view',
+    ),
+#    path(
+#        '<int:recipe_id>/',
+#        views.recipe_view_redirect,
+#        name='recipe_view_redirect',
+#    ),
+    path(
         '<int:recipe_id>/<slug:slug>/edit/',
         views.recipe_edit,
         name='recipe_edit',
@@ -11,20 +23,6 @@ from . import views
         '<int:recipe_id>/<slug:slug>/delete/',
         views.recipe_delete,
         name='recipe_delete',
-    ),
-'''
-
-recipes_urls = [
-    path('new/', views.recipe_new, name='recipe_new'),
-    path(
-        '<int:recipe_id>/<slug:slug>/',
-        views.recipe_view,
-        name='recipe_view',
-    ),
-    path(
-        '<int:recipe_id>/',
-        views.recipe_view_redirect,
-        name='recipe_view_redirect',
     ),
 ]
 

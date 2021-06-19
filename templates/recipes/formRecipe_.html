@@ -31,7 +31,7 @@
       <p class="form__label">Теги</p>
       <div class="form__field-group">
         <div class="tags">
-          {% for tag in form.fields.tag.choices.queryset %}
+          {% for tag in tags %}
             <div class="tags__item">
               <input 
                 type="checkbox" 
@@ -56,10 +56,10 @@
             <div class="form__dropdown-items"></div>
           </div>
           <input type="number" id="cantidad" class="form__input" min="0">
-          <label for="cantidad" class="form__label" id="cantidadVal" oninput="this.value = Math.abs(this.value)">шт.</label>
+          <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
         </div>
         <div class="form__field-group-ingredientes-container">
-          {% for i in recipe.recipe_ingredient.all %}
+          {% for i in recipe.ingredients_amounts.all %}
             <div class="form__field-item-ingredient" id="ing_{{ forloop.counter }}">
               <span> {{ i.ingredient.title }} {{ i.quantity }}{{ i.ingredient.measure }}</span>
               <span class="form__field-item-delete"></span>

@@ -18,7 +18,7 @@ def index(request):
     all_tags = Tag.objects.all()
     tags = request.GET.getlist('tag')
     filter_keys = {}
-    if tags:
+    if len(tags) != 0:
         filter_keys['tag__title__in'] = tags
     recipes = Recipe.objects.filter(**filter_keys).distinct()
     paginator = Paginator(recipes, PAGINATION_PAGE_SIZE)
@@ -55,20 +55,46 @@ def recipe_new(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     if form.is_valid():
         recipe = save_recipe(request, form)
-        print(recipe.slug)
-        print(recipe.author.pk)
-        return redirect('recipe_view', slug=recipe.slug,
-                        user_id=recipe.author.pk)
-    return render(request, 'recipes/formRecipe.html', {'form': form})
+        return redirect('recipe_view', recipe_id=recipe.id, slug=recipe.slug)
+    tags = Tag.objects.all()
+    return render(
+        request,
+        'recipes/formRecipe.html',
+        {'form': form, 'tags': tags}
+    )
+
+
+@login_required
+def recipe_edit(request, slug, user_id):
+    recipe = get_object_or_404(Recipe, slug=slug, author__pk=user_id)
+    if request.user != recipe.author and not request.user.is_superuser:
+        return redirect('index')
+    form = RecipeForm(request.POST or None,
+                      files=request.FILES or None,
+                      instance=recipe)
+    tags = Tag.objects.all()
+    if form.is_valid():
+        author = recipe.author
+        recipe = save_recipe(request, form, author, is_edit=True)
+        return redirect('recipe_view', recipe_id=recipe.id, slug=recipe.slug)
+    return render(request, 'recipes/formRecipe.html', {'form': form,
+                                                       'recipe': recipe,
+                                                       'tags': tags})
+
+
+@login_required
+def recipe_delete(request, slug, user_id):
+    recipe = get_object_or_404(Recipe, slug=slug, author__pk=user_id)
+    if request.user != recipe.author and not request.user.is_superuser:
+        return redirect('index')
+    recipe.delete()
+    return redirect('index')
 
 
 def profile_view(request, username, **filters):
     all_tags = Tag.objects.all()
-    tags = request.GET.getlist('tag')
     author = get_object_or_404(User, username=username)
-    if tags:
-        filters['tag__title__in'] = tags
-    author_recipes = Recipe.objects.filter(author=author).distinct()
+    author_recipes = Recipe.objects.filter(author=author, **filters).distinct()
     is_followed = (
         request.user.is_authenticated
         and Subscription.objects.filter(
@@ -85,6 +111,6 @@ def profile_view(request, username, **filters):
             'author': author,
             'page': page,
             'paginator': paginator,
-            'all_tags ': all_tags,
+            'all_tags': all_tags,
         }
     )

@@ -14,7 +14,7 @@ class CustomModelSerializer(serializers.ModelSerializer):
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('title', 'dimension')
+        fields = '__all__'
         model = Ingredient
 
 
