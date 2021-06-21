@@ -6,6 +6,18 @@ from slugify import slugify
 User = get_user_model()
 
 
+class Measurement(models.Model):
+    name = models.CharField(max_length=32, unique=True,
+                            verbose_name='Название ')
+
+    class Meta:
+        verbose_name = 'Единица измерения'
+        verbose_name_plural = 'Единицы измерения'
+
+    def __str__(self):
+        return self.name
+
+
 class Ingredient(models.Model):
     title = models.CharField(
         'Ингредиент',
@@ -13,38 +25,70 @@ class Ingredient(models.Model):
         unique=True,
         db_index=True
     )
-    measure = models.CharField('Единицы измерения', max_length=100)
+    measure = models.ForeignKey(
+        Measurement,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='ingredients',
+        verbose_name='Единицы измерения')
 
     class Meta:
+        ordering = ('title', )
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        ordering = ['title']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'measure'],
+                name='unique_ingredient')
+        ]
 
     def __str__(self):
         return f'{self.title}, {self.measure}'
 
 
+class TagChoices(models.TextChoices):
+    BREAKFAST = ('breakfast', 'Breakfast')
+    LUNCH = ('lunch', 'Lunch')
+    DINNER = ('dinner', 'Dinner')
+
+
 class Tag(models.Model):
-    COLORS = (
-        ('green', 'Зеленый'),
-        ('orange', 'Оранжевый'),
-        ('purple', 'Пурпурный')
-    )
-    title = models.CharField('Имя тега', max_length=50, db_index=True)
+    title = models.CharField(
+        'Имя тега',
+        max_length=50,
+        db_index=True,
+        choices=TagChoices.choices,
+        unique=True)
     display_name = models.CharField('Имя тега для шаблона', max_length=50)
     color = models.CharField(
         'Цвет тега',
         max_length=50,
-        choices=COLORS,
+        blank=True,
         unique=True)
 
     class Meta:
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
-        ordering = ('title', )
+        ordering = ('display_name', )
 
     def __str__(self):
         return self.title
+
+    def clean(self, *args, **kwargs):
+        colors = {'breakfast': 'orange', 'lunch': 'green', 'dinner': 'purple'}
+        color = colors.get(str(self.title), 'red')
+        titles = {'breakfast': 'Завтрак', 'lunch': 'Обед', 'dinner': 'Ужин'}
+        display_name = titles.get(str(self.title))
+        self.color = color
+        self.display_name = display_name
+        super(Tag, self).clean()
+
+    def full_clean(self, *args, **kwargs):
+        return self.clean(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(Tag, self).save(*args, **kwargs)
 
 
 class Recipe(models.Model):

@@ -65,18 +65,18 @@ def recipe_new(request):
 
 
 @login_required
-def recipe_edit(request, slug, user_id):
-    recipe = get_object_or_404(Recipe, slug=slug, author__pk=user_id)
-    if request.user != recipe.author and not request.user.is_superuser:
-        return redirect('index')
-    form = RecipeForm(request.POST or None,
-                      files=request.FILES or None,
-                      instance=recipe)
+def recipe_edit(request, recipe_slug):
+    recipe = get_object_or_404(Recipe, slug=recipe_slug, author=request.user)
+    form = RecipeForm(
+        data=request.POST or None,
+        files=request.FILES or None,
+        instance=recipe)
+    print(recipe.recipe_id)
     tags = Tag.objects.all()
     if form.is_valid():
         author = recipe.author
         recipe = save_recipe(request, form, author, is_edit=True)
-        return redirect('recipe_view', recipe_id=recipe.id, slug=recipe.slug)
+        return redirect('recipe_view', slug=recipe.slug)
     return render(request, 'recipes/formRecipe.html', {'form': form,
                                                        'recipe': recipe,
                                                        'tags': tags})

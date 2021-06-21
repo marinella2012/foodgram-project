@@ -3,7 +3,7 @@
 {% load static %}
 {% load user_filters %}
 
-{% block title %}{% endblock %}
+{% block title %}Создание рецепта{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'pages/form.css' %}">
 {% endblock %}
@@ -56,7 +56,7 @@
             <div class="form__dropdown-items"></div>
           </div>
           <input type="number" id="cantidad" class="form__input" min="0">
-          <label for="cantidad" class="form__label" id="cantidadVal" oninput="this.value = Math.abs(this.value)">шт.</label>
+          <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
         </div>
         <div class="form__field-group-ingredientes-container">
           {% for i in recipe.recipe_ingredient.all %}
