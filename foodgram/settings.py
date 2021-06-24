@@ -4,6 +4,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 ENV = environ
@@ -14,27 +15,24 @@ SECRET_KEY = ENV.get('SECRET_KEY')
 
 DEBUG = True
 
-# ALLOWED_HOSTS = ENV['ALLOWED_HOSTS'].split()
-
 ALLOWED_HOSTS = ['*']
 
-SITE_ID = 1
-
 INSTALLED_APPS = [
-    'recipe',
     'users',
-    'api',
-    'about',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sorl.thumbnail',
+    'debug_toolbar',
+    'about',
+    'api',
+    'recipes',
     'rest_framework',
-    'django_filters',
-    'widget_tweaks',
+    'cart',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
@@ -45,11 +43,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-ROOT_URLCONF = 'foodgram.urls'
 
+ROOT_URLCONF = 'foodgram.urls'
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
 
 TEMPLATES = [
     {
@@ -62,12 +62,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'recipe.context_processors.year',
-                'recipe.context_processors.shop_list_size',
+                'recipes.context_processors.year'
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
@@ -80,26 +80,6 @@ DATABASES = {
 }
 
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME':
-        'django.contrib.auth.password_validation.'
-        'UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
@@ -109,7 +89,24 @@ REST_FRAMEWORK = {
     )
 }
 
-LANGUAGE_CODE = 'ru-RU'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -119,29 +116,30 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = '/auth/login/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
 
 LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
 
-ADMINS = (
-    ('admin', 'ficus23@mail.ru'),
-)
-MANAGERS = ADMINS
+SITE_ID = 1
 
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-    EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-PAGINATION_PAGE_SIZE = 6
+CART_SESSION_ID = 'cart'
+
+RECORDS_ON_THE_PAGE = 6

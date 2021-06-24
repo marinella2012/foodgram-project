@@ -1,21 +1,11 @@
 from django.contrib import admin
 
-from .models import Favorite, Purchase, Subscription
+from api.models import Favorite
 
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe')
-    autocomplete_fields = ('user', 'recipe')
-
-
-@admin.register(Subscription)
-class SubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'author')
-    autocomplete_fields = ('user', 'author')
-
-
-@admin.register(Purchase)
-class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe')
-    autocomplete_fields = ('user', 'recipe')
+    list_display = ('user', 'recipe')
+    list_filter = ('user',)
+    search_fields = ('user',)
+    ordering = ('user',)
