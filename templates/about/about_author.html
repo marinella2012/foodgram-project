@@ -1,15 +1,15 @@
-{% extends 'base.html' %}
+{% extends '../base.html' %}
 
 {% load static %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}Об авторе{% endblock %}
 {% block scripts %}
-<link rel="stylesheet" href="{% static 'pages/index.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="custom-center-block">
-  <p class="custom-text-block">Обо мне</p>
+  <p class="custom-text-block">https://github.com/marinella2012</p>
   <div class="custom-button-block">
     <a class="button button_style_blue" href="{% url 'index' %}">Перейти на главную</a>
   </div>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Список покупок{% endblock %}
+{% block scripts %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/pages/shopList.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
+{% endblock %}
+{% block content %}
+<div class="main__header">
+    <h1 class="main__title">Список покупок</h1>
+</div>
+{% if cart %}
+<div class="card-list card-list_column">
+    <ul class="shopping-list">
+        {% for recipe in cart %}
+        <li class="shopping-list__item" data-id="{{ recipe.recipe.pk}}">
+            {% include 'includes/card_recipe_small.html' with recipe=recipe %}
+        </li>
+        {% endfor %}
+        <a href="{% url 'cart:cart_download' %}"><button class="button button_style_blue">Скачать список</button></a>
+    </ul>
+{% else %}
+    <div class="custom-center-block">
+        <p class="custom-text-block">
+            Вы ещё не добавили ничего в корзину... Перейти на&nbsp;<a href="{% url 'index' %}">главную страницу</a>, чтобы выбрать.
+        </p>
+    </div>
+{% endif %}
+</div>
+<script src="{% static 'js/config/config.js' %}"></script>
+<script src="{% static 'js/components/Header.js' %}"></script>
+<script src="{% static 'js/components/ShopList.js' %}"></script>
+<script src="{% static 'js/api/Api.js' %}"></script>
+<script src="{% static 'shopList.js' %}"></script>
+{% endblock %}
+

@@ -1,51 +1,12 @@
-from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
 urlpatterns = [
-    path('signup/', views.SignUp.as_view(), name='signup'),
-    path(
-        'login/',
-        auth_views.LoginView.as_view(template_name='auth/authForm.html'),
-        name='login'
-    ),
-    path(
-        'logout/',
-        auth_views.LogoutView.as_view(template_name='auth/logout.html'),
-        name='logout'
-    ),
-    path(
-        'password-change/',
-        auth_views.PasswordChangeView.as_view(
-            template_name='auth/changePassword.html'
-        ),
-        name='password_change'
-    ),
-    path(
-        'password-change-done/',
-        auth_views.PasswordChangeDoneView.as_view(
-            template_name='auth/changePasswordDone.html'
-        ),
-        name='password_change_done'
-    ),
-    path('password-reset/', auth_views.PasswordResetView.as_view(
-        template_name='auth/resetPassword.html'
-        ),
-        name='password_reset'
-    ),
-    path(
-        'password-reset-done/',
-        auth_views.PasswordResetDoneView.as_view(
-            template_name='auth/resetPasswordDone.html'
-        ),
-        name='password_reset_done'
-    ),
-    path(
-        'password-reset-confirm/<uidb64>/<token>/',
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name='users/resetPasswordConfirm.html'
-        ),
-        name='password_reset_confirm'
-    ),
+    path('', include('django.contrib.auth.urls')),
+    path('register/', views.SignUp.as_view(), name='register'),
+    path('subscriptions/me/', views.subscriptions, name='subscriptions'),
+    path('subscriptions/', views.subscriptions_add, name='subscriptions_add'),
+    path('subscriptions/<int:user_id>/', views.subscriptions_remove,
+         name='subscriptions_remove')
 ]

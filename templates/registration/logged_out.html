@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Выход{% endblock %}
+{% block scripts %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
+{% endblock %}
+{% block content %}
+<div class="custom-center-block">
+    <p class="custom-text-block">
+        Вы покидаете наш сайт.<br>
+        Вы успешно вышли из системы. Но Вы всегда можете&nbsp; <a href="{% url 'login' %}">войти заново</a>.
+    </p>
+</div>
+{% endblock %}
