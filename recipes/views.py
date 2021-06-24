@@ -40,8 +40,7 @@ def create_recipe(request):
         recipe = save_recipe(request, form)
         return redirect(
             'recipe_detail',
-            slug=recipe.slug,
-            user_id=recipe.author.pk
+            slug=recipe.slug
         )
     return render(request, 'form_recipe.html', {'form': form})
 
@@ -59,7 +58,7 @@ def edit_recipe(request, slug, user_id):
         recipe = save_recipe(request, form, author, is_edit=True)
         return redirect(
             'recipe_detail',
-            slug=recipe.slug,
+            slug=recipe.slug
         )
     return render(request, 'form_recipe.html', {'form': form,
                                                 'recipe': recipe})

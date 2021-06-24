@@ -1,4 +1,4 @@
-import csv
+import json
 
 from django.core.management.base import BaseCommand
 
@@ -9,13 +9,15 @@ file_name = f'{BASE_DIR}/fixtures/ingredients.csv'
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
 
     def handle(self, *args, **options):
-        with open(file_name) as csv_file:
-            reader = csv.reader(csv_file)
-            for line in reader:
-                name, unit = line
-                unit, create = Measurement.objects.get_or_create(name=unit)
-                Ingredient.objects.get_or_create(name=name,
-                                                 unit_of_measurement=unit)
+        source = json.load(open('fixtures/ingredients.json', 'r'))
+        for line in source:
+            ingredient_name = line['title']
+            measure_name = line['dimension']
+            measure = Measurement.objects.get_or_create(name=measure_name)[0]
+            Ingredient.objects.get_or_create(
+                name=ingredient_name,
+                unit_of_measurement=measure
+            )
+        print('loaded')

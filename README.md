@@ -1,8 +1,7 @@
 # foodgram-project
 
-![foodgram workflow](https://github.com/Shubarin/foodgram-project/actions/workflows/foodgram_workflow.yml/badge.svg)
+![foodgram workflow](https://github.com/marinella2012/foodgram-project/actions/workflows/foodgram_workflow.yml/badge.svg)
 
-Site: http://84.252.132.152/
 
 # Описание
 Cайт «Продуктовый помощник».
