@@ -48,7 +48,7 @@ def cart_download(request):
     content = ''
     for ingredient in ingredients:
         if ingredient["ingredients__name"] is not None:
-            string = '\r\n'.join(
+            string = (
                 f'{ingredient["ingredients__name"]}-'
                 f'{ingredient["amount"]} '
                 f'{ingredient["ingredients__unit_of_measurement__name"]}; '
