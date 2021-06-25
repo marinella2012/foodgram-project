@@ -48,9 +48,11 @@ def cart_download(request):
     content = ''
     for ingredient in ingredients:
         if ingredient["ingredients__name"] is not None:
-            string = (f'{ingredient["ingredients__name"]}-'
-                      f'{ingredient["amount"]} '
-                      f'{ingredient["ingredients__unit_of_measurement__name"]}; ')
+            string = '\r\n'.join(
+                f'{ingredient["ingredients__name"]}-'
+                f'{ingredient["amount"]} '
+                f'{ingredient["ingredients__unit_of_measurement__name"]}; '
+            )
             content += string + '\n'
     response = HttpResponse(content=content, content_type='text/plain')
     response['Content-Disposition'] = f'attachment; filename={filename}'
