@@ -1,6 +1,6 @@
 # foodgram-project
 
-![foodgram workflow](https://github.com/marinella2012/foodgram-project/actions/workflows/foodgram_workflow.yml/badge.svg)
+![foodgram workflow](https://github.com/marinella2012/foodgram-project/actions/workflows/main.yml/badge.svg)
 
 
 # Описание
