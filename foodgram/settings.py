@@ -88,7 +88,6 @@ DATABASES_DEV = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 if DEBUG:
     DATABASES = DATABASES_DEV
 else:
