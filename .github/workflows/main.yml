@@ -56,7 +56,9 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          sudo docker-compose down --rmi local
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram
+          sudo docker-compose stop web
+          sudo docker-compose rm web
           sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/foodgram
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} > .env
           echo EMAIL_HOST=${{ secrets.EMAIL_HOST }} >> .env
@@ -69,8 +71,8 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          echo DEBUG=False >> .env
           echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
-          echo SITE_ID=3 >> .env
           sudo docker-compose up -d
   send_message:
     runs-on: ubuntu-latest
@@ -79,6 +81,6 @@ jobs:
     - name: Send notification
       uses: appleboy/telegram-action@master
       with:
-        to: ${{ secrets.TELEGRAM_ID }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
+        to: ${{ secrets.MY_TELEGRAM_ID }}
+        token: ${{ secrets.MY_TELEGRAM_TOKEN }}
         message: ${{ github.workflow }} succesfully deployed
