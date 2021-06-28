@@ -51,7 +51,7 @@ jobs:
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.PUBLIC_IPV4 }}
+        host: ${{ secrets.HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
@@ -79,6 +79,6 @@ jobs:
     - name: Send notification
       uses: appleboy/telegram-action@master
       with:
-        to: ${{ secrets.MY_TELEGRAM_ID }}
-        token: ${{ secrets.MY_TELEGRAM_TOKEN }}
+        to: ${{ secrets.TELEGRAM_ID }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
         message: ${{ github.workflow }} succesfully deployed
