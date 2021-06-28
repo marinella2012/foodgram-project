@@ -4,8 +4,7 @@
 
 
 # Описание
-Cайт «Foodgram»
-[Foodgram](http://marsmrn.tk) - это сайт для любителей еды. 
+Cайт [Foodgram](http://marsmrn.tk) - это сайт для любителей еды. 
  
 
 # Порядок установки
