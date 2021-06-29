@@ -1,4 +1,8 @@
-name: foodgram workflowon: [push]jobs:
+name: foodgram workflow
+
+on: [push]jobs:
+
+jobs:
   tests:
     runs-on: ubuntu-latest    steps:
       - uses: actions/checkout@v2
