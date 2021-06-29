@@ -43,12 +43,12 @@ name: foodgram workflowon: [push]jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
           stack_file_name: docker-compose.yaml
           script: |
-            sudo docker pull ${{ DOCKER_USERNAME }}/foodgram:v.1
+            sudo docker pull ${{ DOCKER_USERNAME }}/foodgram:latest
             sudo docker-compose stop
             sudo docker-compose rm web
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-            echo DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
             echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
