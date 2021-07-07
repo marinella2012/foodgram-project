@@ -1,6 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 from slugify import slugify
+
+User = get_user_model()
 
 
 class TagChoices(models.TextChoices):
@@ -140,3 +143,29 @@ class Tag(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super(Tag, self).save(*args, **kwargs)
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='cart'
+    )
+    recipe = models.ForeignKey(
+        to=Recipe,
+        on_delete=models.CASCADE,
+        related_name='shopping'
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='unique_user_cart_recipe'
+            )
+        ]
+        verbose_name = 'Список покупок'
+        verbose_name_plural = 'Списки покупок'
+
+    def __str__(self):
+        return f'{self.recipe}\tin cart of\t{self.user}'

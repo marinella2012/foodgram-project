@@ -13,11 +13,11 @@
 <div class="card-list card-list_column">
     <ul class="shopping-list">
         {% for recipe in cart %}
-        <li class="shopping-list__item" data-id="{{ recipe.recipe.pk}}">
+        <li class="shopping-list__item" data-id="{{ recipe.recipe.pk }}">
             {% include 'includes/card_recipe_small.html' with recipe=recipe %}
         </li>
         {% endfor %}
-        <a href="{% url 'cart:cart_download' %}"><button class="button button_style_blue">Скачать список</button></a>
+        <a href="{% url 'cart_download' %}"><button class="button button_style_blue">Скачать список</button></a>
     </ul>
 {% else %}
     <div class="custom-center-block">

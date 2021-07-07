@@ -19,7 +19,7 @@ class Api {
         this.apiUrl =  apiUrl;
     }
   getPurchases () {
-    return fetch(`/cart/`, {
+    return fetch(`/purchases`, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -32,7 +32,7 @@ class Api {
       })
   }
   addPurchases (id) {
-    return fetch(`/cart/add/`, {
+    return fetch(`/purchases/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ class Api {
       })
   }
   removePurchases (id){
-    return fetch(`/cart/remove/${id}`, {
+    return fetch(`/purchases/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ class Api {
     })
       .then( e => {
           if(e.ok) {
-              return e.json()
+              return e
           }
           return Promise.reject(e.statusText)
       })
