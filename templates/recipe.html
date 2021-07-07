@@ -36,7 +36,7 @@
         </div>
         <ul class="single-card__items">
             <li class="single-card__item">
-                {% if recipe.pk|stringformat:"i" in request.session.cart %}
+                {% if recipe.in_cart %}
                 <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span>Рецепт добавлен</button>
                 {% else %}
                 <button class="button button_style_blue" name="purchases"

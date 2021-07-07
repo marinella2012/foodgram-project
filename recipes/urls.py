@@ -8,7 +8,8 @@ js_router.register('purchases', views.CartViewSet, basename='purchases')
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('', include(js_router.urls)),    path('favorites/', views.favorites, name='favorites'),
+    path('', include(js_router.urls)),
+    path('favorites/', views.favorites, name='favorites'),
     path('new_recipe/', views.create_recipe, name='create_recipe'),
     path('recipes/<slug:slug>/', views.recipe_detail,
          name='recipe_detail'),
