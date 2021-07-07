@@ -1,7 +1,6 @@
 from django import template
 
 register = template.Library()
-from cart.cart import Cart
 
 
 @register.filter
@@ -46,8 +45,3 @@ def set_tag_qs(request, tag):
 def tags_to_url_params(tags):
     url_param_tags = [f'tags={tag}' for tag in tags]
     return '&' + '&'.join(url_param_tags)
-
-@register.simple_tag(takes_context=True)
-def recipe_in_cart(context, id):
-    cart = Cart(context['request'])
-    return cart.in_cart(id)

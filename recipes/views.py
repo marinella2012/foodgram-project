@@ -41,10 +41,6 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-<<<<<<< HEAD
-def recipe_detail(request, slug, user_id):
-    recipe = get_object_or_404(Recipe, slug=slug, author__pk=user_id)
-=======
 def recipe_detail(request, slug):
     recipe = Recipe.objects.annotate(
         in_cart=Exists(
@@ -53,7 +49,6 @@ def recipe_detail(request, slug):
                 recipe_id=OuterRef('id')).only('id')
         )
     ).get(slug=slug)
->>>>>>> 5866998ce60301ff42c4e0a9d1902c2934710c5a
     context = {'recipe': recipe}
     return render(request, 'recipe.html', context)
 
