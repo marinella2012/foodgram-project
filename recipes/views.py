@@ -47,8 +47,8 @@ def recipe_detail(request, slug):
             Cart.objects.filter(
                 user=request.user,
                 recipe_id=OuterRef('id')).only('id')
-            )
-        ).get(slug=slug)
+        )
+    ).get(slug=slug)
     context = {'recipe': recipe}
     return render(request, 'recipe.html', context)
 
@@ -133,7 +133,7 @@ def favorites(request):
                     user=request.user,
                     recipe_id=OuterRef('id')).only('id')
             )
-        )                        
+        )
     paginator = Paginator(recipes, RECORDS_ON_THE_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
