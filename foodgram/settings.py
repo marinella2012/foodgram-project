@@ -16,12 +16,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
 
-<<<<<<< HEAD
-#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-ALLOWED_HOSTS = ['*']
-=======
-
->>>>>>> ee5933c31e17c0f9cc675f0eca53fec4a03a4816
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
