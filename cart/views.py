@@ -1,38 +1,31 @@
-import json
-
 from django.db.models import Sum
-from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_POST
+from django.http.response import HttpResponse
+from django.shortcuts import redirect
+from django.views.generic import ListView
 
+from cart.cart import Cart
 from recipes.models import Recipe
 
-from .cart import Cart
+
+class CartListView(ListView):
+    template_name = 'cart_detail.html'
+
+    def get_queryset(self):
+        cart = Cart(self.request)
+        recipes_id = cart.get_ids()
+        return Recipe.objects.filter(pk__in=recipes_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Список покупок'
+        return context
 
 
-@require_POST
-def cart_add(request):
-    recipe_id = json.loads(request.body).get('id')
+def cart_remove(request, id):
     cart = Cart(request)
-    recipe = get_object_or_404(Recipe, id=recipe_id)
-    cart.add(recipe=recipe)
-    if 'cart' not in request.META['HTTP_REFERER']:
-        return JsonResponse({'success': True})
-    return redirect('cart:cart_detail')
-
-
-def cart_remove(request, recipe_id):
-    cart = Cart(request)
-    product = get_object_or_404(Recipe, id=recipe_id)
-    cart.remove(product)
-    if 'cart' not in request.META['HTTP_REFERER']:
-        return JsonResponse({'success': True})
-    return redirect('cart:cart_detail')
-
-
-def cart_detail(request):
-    cart = Cart(request)
-    return render(request, 'cart_detail.html', {'cart': cart})
+    if cart.in_cart(id):
+        cart.remove(id)
+    return redirect('cart_detail')
 
 
 def cart_download(request):

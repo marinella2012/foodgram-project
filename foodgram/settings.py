@@ -12,12 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = ENV.get('SECRET_KEY')
 
-DEBUG = False
+DEBUG = ENV.get('DEBUG')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
 
-
 INSTALLED_APPS = [
+    'cart',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'api',
     'recipes',
     'rest_framework',
-    'cart',
     'sorl.thumbnail',
 ]
 
@@ -88,6 +87,7 @@ DATABASES_DEV = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 if DEBUG:
     DATABASES = DATABASES_DEV
 else:
@@ -103,7 +103,6 @@ REST_FRAMEWORK = {
     )
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -118,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 LANGUAGE_CODE = 'ru-RU'
 

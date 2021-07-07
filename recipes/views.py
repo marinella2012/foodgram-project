@@ -27,8 +27,8 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-def recipe_detail(request, slug):
-    recipe = get_object_or_404(Recipe, slug=slug)
+def recipe_detail(request, slug, user_id):
+    recipe = get_object_or_404(Recipe, slug=slug, author__pk=user_id)
     context = {'recipe': recipe}
     return render(request, 'recipe.html', context)
 
@@ -38,10 +38,9 @@ def create_recipe(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     if form.is_valid():
         recipe = save_recipe(request, form)
-        return redirect(
-            'recipe_detail',
-            slug=recipe.slug
-        )
+        return redirect('recipe_detail',
+                        slug=recipe.slug,
+                        user_id=recipe.author.pk)
     return render(request, 'form_recipe.html', {'form': form})
 
 
@@ -58,7 +57,8 @@ def edit_recipe(request, slug, user_id):
         recipe = save_recipe(request, form, author, is_edit=True)
         return redirect(
             'recipe_detail',
-            slug=recipe.slug
+            slug=recipe.slug,
+            user_id=recipe.author.pk
         )
     return render(request, 'form_recipe.html', {'form': form,
                                                 'recipe': recipe})
@@ -73,10 +73,10 @@ def recipe_delete(request, slug, user_id):
     return redirect('index')
 
 
-def profile(request, username):
+def profile(request, user_id):
     tags = request.GET.getlist('tags', TAGS)
     all_tags = Tag.objects.all()
-    author = get_object_or_404(User, username=username)
+    author = get_object_or_404(User, pk=user_id)
     recipes = Recipe.objects.filter(author=author,
                                     tags__name__in=tags).distinct()
     paginator = Paginator(recipes, RECORDS_ON_THE_PAGE)

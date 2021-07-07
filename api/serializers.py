@@ -1,8 +1,16 @@
-from recipe.models import Ingredient
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Favorite, Purchase, Subscription
+from recipes.models import Ingredient
+from users.models import User
+
+from .models import Favorite
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 
 class CustomModelSerializer(serializers.ModelSerializer):
@@ -12,30 +20,15 @@ class CustomModelSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    unit_of_measurement = serializers.SlugRelatedField(read_only=True,
+                                                       slug_field='name')
+
     class Meta:
-        fields = '__all__'
         model = Ingredient
-
-
-class SubscriptionSerializer(CustomModelSerializer):
-    class Meta:
-        fields = ('author', )
-        model = Subscription
-
-    def validate_author(self, value):
-        user = self.context['request'].user
-        if user.id == value:
-            raise ValidationError('Нельзя подписаться на самого себя')
-        return value
+        fields = '__all__'
 
 
 class FavoriteSerializer(CustomModelSerializer):
     class Meta:
         fields = ('recipe', )
         model = Favorite
-
-
-class PurchaseSerializer(CustomModelSerializer):
-    class Meta:
-        fields = ('recipe', )
-        model = Purchase
