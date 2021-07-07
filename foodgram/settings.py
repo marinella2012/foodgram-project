@@ -12,12 +12,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = ENV.get('SECRET_KEY')
 
-DEBUG = True
+DEBUG = False
 
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
+
+<<<<<<< HEAD
 #ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 ALLOWED_HOSTS = ['*']
+=======
+
+>>>>>>> ee5933c31e17c0f9cc675f0eca53fec4a03a4816
 INSTALLED_APPS = [
-    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'users',
     'about',
     'api',
     'recipes',
@@ -61,7 +67,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'recipes.context_processors.year'
             ],
         },
     },
@@ -71,12 +76,27 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 
-DATABASES = {
+DATABASES_PROD = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': os.environ.get('DB_ENGINE'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
+
+DATABASES_DEV = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+if DEBUG:
+    DATABASES = DATABASES_DEV
+else:
+    DATABASES = DATABASES_PROD
 
 
 REST_FRAMEWORK = {
@@ -117,7 +137,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -1,6 +1,7 @@
 <footer class="footer">
     <div class="footer__container container">
-        <a href="{% url 'index' %}" class="footer__brand link">© {{ year }} Продуктовый помощник</a>
+        {% now 'Y' as current_year %}
+        <a href="{% url 'index' %}" class="footer__brand link">©{{ current_year }} Продуктовый помощник</a>
         <ul class="footer__items">
             {% if user.is_superuser %}
             <li class="footer__item"><a href="{% url 'admin:index' %}" class="footer__link link">Админка</a></li>

@@ -1,10 +1,10 @@
 # foodgram-project
 
-![foodgram workflow](https://github.com/marinella2012/foodgram-project/actions/workflows/foodgram_workflow.yml/badge.svg)
+![foodgram workflow](https://github.com/marinella2012/foodgram-project/actions/workflows/main.yml/badge.svg)
 
 
 # Описание
-Cайт «Foodgram»
+Cайт [Foodgram](http://marsmrn.tk) - это сайт для любителей еды. 
  
 
 # Порядок установки
