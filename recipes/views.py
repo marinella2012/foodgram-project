@@ -1,12 +1,18 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Exists, F, OuterRef, Sum
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from rest_framework import mixins
+from rest_framework.viewsets import GenericViewSet
 
 from foodgram.settings import RECORDS_ON_THE_PAGE
 from recipes.forms import RecipeForm
-from recipes.models import Recipe, Tag, TagChoices
+from recipes.models import Cart, Recipe, RecipeIngredient, Tag, TagChoices
 from recipes.utils import save_recipe
 from users.models import User
+
+from .serializers import CartSerializer
 
 TAGS = [TagChoices.BREAKFAST, TagChoices.LUNCH, TagChoices.DINNER]
 
@@ -15,6 +21,14 @@ def index(request):
     tags = request.GET.getlist('tags', TAGS)
     all_tags = Tag.objects.all()
     recipes = Recipe.objects.filter(tags__name__in=tags).distinct()
+    if request.user.is_authenticated:
+        recipes = recipes.annotate(
+            in_cart=Exists(
+                Cart.objects.filter(
+                    user=request.user,
+                    recipe_id=OuterRef('id')).only('id')
+            )
+        )
     paginator = Paginator(recipes, RECORDS_ON_THE_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -27,8 +41,19 @@ def index(request):
     return render(request, 'index.html', context)
 
 
+<<<<<<< HEAD
 def recipe_detail(request, slug, user_id):
     recipe = get_object_or_404(Recipe, slug=slug, author__pk=user_id)
+=======
+def recipe_detail(request, slug):
+    recipe = Recipe.objects.annotate(
+        in_cart=Exists(
+            Cart.objects.filter(
+                user=request.user,
+                recipe_id=OuterRef('id')).only('id')
+        )
+    ).get(slug=slug)
+>>>>>>> 5866998ce60301ff42c4e0a9d1902c2934710c5a
     context = {'recipe': recipe}
     return render(request, 'recipe.html', context)
 
@@ -79,6 +104,14 @@ def profile(request, user_id):
     author = get_object_or_404(User, pk=user_id)
     recipes = Recipe.objects.filter(author=author,
                                     tags__name__in=tags).distinct()
+    if request.user.is_authenticated:
+        recipes = recipes.annotate(
+            in_cart=Exists(
+                Cart.objects.filter(
+                    user=request.user,
+                    recipe_id=OuterRef('id')).only('id')
+            )
+        )
     paginator = Paginator(recipes, RECORDS_ON_THE_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -98,6 +131,14 @@ def favorites(request):
     all_tags = Tag.objects.all()
     recipes = Recipe.objects.filter(favorite_by__user=request.user,
                                     tags__name__in=tags).distinct()
+    if request.user.is_authenticated:
+        recipes = recipes.annotate(
+            in_cart=Exists(
+                Cart.objects.filter(
+                    user=request.user,
+                    recipe_id=OuterRef('id')).only('id')
+            )
+        )
     paginator = Paginator(recipes, RECORDS_ON_THE_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -108,3 +149,58 @@ def favorites(request):
         'all_tags': all_tags,
     }
     return render(request, 'fav.html', context)
+
+
+@login_required
+def cart(request):
+    user_cart = Recipe.objects.filter(shopping__user=request.user)
+    return render(
+        request,
+        'cart_detail.html',
+        context={'cart': user_cart}
+    )
+
+
+class CartViewSet(
+    GenericViewSet,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin
+):
+    serializer_class = CartSerializer
+
+    queryset = Cart.objects.all()
+
+    def get_object(self):
+        return get_object_or_404(
+            klass=self.queryset,
+            user=self.request.user,
+            recipe__id=self.kwargs.get('pk')
+        )
+
+
+@login_required
+def cart_download(request):
+    return HttpResponse(
+        bytes('\r\n'.join(
+            [
+                (f"{ingredient['name']}: {ingredient['total']} "
+                 f"{ingredient['unit']}")
+                for ingredient in RecipeIngredient.objects.filter(
+                    recipe__shopping__user=request.user
+                ).values(
+                    name=F('ingredient__name'),
+                    unit=F('ingredient__unit_of_measurement__name')
+                ).order_by(
+                    'name'
+                ).annotate(
+                    total=Sum('quantity')
+                )
+            ]
+        ),
+            'utf-8'
+        ),
+        headers={
+            'Content-Type': 'text/plain',
+            'Content-Disposition': 'attachment; filename="card_list.txt"'
+        }
+    )

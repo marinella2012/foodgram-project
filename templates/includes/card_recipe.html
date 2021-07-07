@@ -17,13 +17,19 @@
     </div>
   </div>
   <div class="card__footer">
+<<<<<<< HEAD
     {% recipe_in_cart recipe.pk as in_cart %}
     {% if in_cart %}
+=======
+    {% if request.user.is_authenticated %}
+    {% if recipe.in_cart %}
+>>>>>>> 5866998ce60301ff42c4e0a9d1902c2934710c5a
     <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span>Рецепт добавлен</button>
     {% else %}
     <button class="button button_style_light-blue" name="purchases"
             data-out><span class="icon-plus button__icon"></span>Добавить в покупки
     </button>
+    {% endif %}
     {% endif %}
     {% include './favorite_button.html' with recipe=recipe big=False %}
   </div>
