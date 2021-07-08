@@ -12,9 +12,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = ENV.get('SECRET_KEY')
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['84.201.154.175', 'marsmrn.tk', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    '84.201.154.175',
+    'marsmrn.tk',
+    'localhost',
+    '127.0.0.1',
+    'web'
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
