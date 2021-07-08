@@ -20,4 +20,4 @@ class Command(BaseCommand):
                 name=ingredient_name,
                 unit_of_measurement=measure
             )
-        print('loaded')
+        print('Loaded')

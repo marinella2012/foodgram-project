@@ -12,12 +12,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = ENV.get('SECRET_KEY')
 
-DEBUG = ENV.get('DEBUG')
+DEBUG = True
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
+ALLOWED_HOSTS = ['84.201.154.175', 'marsmrn.tk', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
-    'cart',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

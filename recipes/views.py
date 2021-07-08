@@ -58,15 +58,13 @@ def create_recipe(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     if form.is_valid():
         recipe = save_recipe(request, form)
-        return redirect('recipe_detail',
-                        slug=recipe.slug,
-                        user_id=recipe.author.pk)
+        return redirect('recipe_detail', slug=recipe.slug)
     return render(request, 'form_recipe.html', {'form': form})
 
 
 @login_required
-def edit_recipe(request, slug, user_id):
-    recipe = get_object_or_404(Recipe, slug=slug, author__pk=user_id)
+def edit_recipe(request, slug):
+    recipe = get_object_or_404(Recipe, slug=slug, author=request.user)
     if request.user != recipe.author and not request.user.is_superuser:
         return redirect('index')
     form = RecipeForm(request.POST or None,
@@ -75,28 +73,24 @@ def edit_recipe(request, slug, user_id):
     if form.is_valid():
         author = recipe.author
         recipe = save_recipe(request, form, author, is_edit=True)
-        return redirect(
-            'recipe_detail',
-            slug=recipe.slug,
-            user_id=recipe.author.pk
-        )
+        return redirect('recipe_detail', slug=recipe.slug)
     return render(request, 'form_recipe.html', {'form': form,
                                                 'recipe': recipe})
 
 
 @login_required
-def recipe_delete(request, slug, user_id):
-    recipe = get_object_or_404(Recipe, slug=slug, author__pk=user_id)
+def recipe_delete(request, slug):
+    recipe = get_object_or_404(Recipe, slug=slug, author=request.user)
     if request.user != recipe.author and not request.user.is_superuser:
         return redirect('index')
     recipe.delete()
     return redirect('index')
 
 
-def profile(request, user_id):
+def profile(request, username):
     tags = request.GET.getlist('tags', TAGS)
     all_tags = Tag.objects.all()
-    author = get_object_or_404(User, pk=user_id)
+    author = get_object_or_404(User, username=username)
     recipes = Recipe.objects.filter(author=author,
                                     tags__name__in=tags).distinct()
     if request.user.is_authenticated:

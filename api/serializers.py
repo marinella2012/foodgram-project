@@ -3,7 +3,13 @@ from rest_framework import serializers
 from recipes.models import Ingredient
 from users.models import User
 
-from .models import Favorite
+from .models import Favorite, Recipe
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):

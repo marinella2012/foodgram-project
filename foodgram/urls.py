@@ -12,9 +12,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('about/', include('about.urls')),
     path('api/', include('api.urls')),
-    path('', include('users.urls')),
     path('', include('recipes.urls')),
+    path('', include('users.urls')),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL,

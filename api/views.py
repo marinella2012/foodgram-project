@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.response import Response
 
-from cart.cart import Cart
 from recipes.models import Ingredient, Recipe
 from users.models import User
 
@@ -55,24 +54,6 @@ class CreateDestroyViewSet(mixins.CreateModelMixin,
         instance = self.get_object(user=self.request.user)
         success = instance.delete()
         return Response({'success': bool(success)}, status=status.HTTP_200_OK)
-
-
-class PurchasesView(viewsets.ModelViewSet):
-    def create(self, request):
-        id = request.data.get('id')
-        cart = Cart(self.request)
-        if not Recipe.objects.filter(pk=id).exists() or cart.in_cart(id):
-            return Response(status=status.HTTP_400_BAD_REQUEST,
-                            data=UNSUCCESS)
-        cart.add(id)
-        return Response(status=status.HTTP_201_CREATED, data=SUCCESS)
-
-    def destroy(self, request, pk=None):
-        cart = Cart(request)
-        if Recipe.objects.filter(pk=pk).exists() and cart.in_cart(pk):
-            cart.remove(pk)
-            return Response(status=status.HTTP_202_ACCEPTED, data=SUCCESS)
-        return Response(status=status.HTTP_400_BAD_REQUEST, data=UNSUCCESS)
 
 
 class FavoriteViewSet(CreateDestroyViewSet):

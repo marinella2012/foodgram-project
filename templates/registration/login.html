@@ -12,8 +12,6 @@
 <div class="form-container">
     <form method="post" action="{% url 'login' %}" class="form">
         {% csrf_token %}
-
-
         {% if next %}
         <div class="form__field-group">
           <span class="form__error">Пожалуйста, авторизуйтесь.</span>

@@ -13,11 +13,7 @@
 <div class="card-list card-list_column">
     <ul class="shopping-list">
         {% for recipe in cart %}
-<<<<<<< HEAD
-        <li class="shopping-list__item" data-id="{{ recipe.recipe.pk }}">
-=======
         <li class="shopping-list__item" data-id="{{ recipe.pk }}">
->>>>>>> 5866998ce60301ff42c4e0a9d1902c2934710c5a
             {% include 'includes/card_recipe_small.html' with recipe=recipe %}
         </li>
         {% endfor %}
